@@ -1,14 +1,30 @@
 package dev.rodrigosambade.jdbc;
-import org.junit.jupiter.api.Test;
+
 import java.math.BigDecimal;
-import static org.junit.jupiter.api.Assertions.*;
-class JdbcExercisesTest{
-    @Test void queryAndMetadata()throws Exception{
-        try(var c=JdbcExercises.open()){
-            JdbcExercises.createSchema(c);
-            JdbcExercises.insert(c,"Uno",new BigDecimal("5"),2);
-            assertEquals(java.util.List.of("Uno"),JdbcExercises.namesUnder(c,BigDecimal.TEN));
-            assertTrue(JdbcExercises.columns(c).contains("ID"));
+import java.sql.Connection;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class JdbcExercisesTest {
+
+    @Test
+    void queriesDataAndReadsMetadata() throws Exception {
+        try (Connection connection = JdbcExercises.open()) {
+            JdbcExercises.createSchema(connection);
+            JdbcExercises.insert(
+                    connection,
+                    "Uno",
+                    new BigDecimal("5"),
+                    2);
+
+            assertEquals(
+                    List.of("Uno"),
+                    JdbcExercises.namesUnder(connection, BigDecimal.TEN));
+            assertTrue(JdbcExercises.columns(connection).contains("ID"));
         }
     }
 }
